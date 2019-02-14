@@ -1,0 +1,10 @@
+/* oefenopgave_4_1
+Author: Wesley Bouchard
+Student number: 575976 
+Date: 11-02-2019 */
+
+println(a + b);
+=
+println(24 + 36);
+=
+60
