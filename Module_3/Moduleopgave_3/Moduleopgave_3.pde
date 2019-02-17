@@ -1,7 +1,7 @@
 /* Moduleopave_3
 Author: Wesley Bouchard
 Student number: 575976 
-Date: 10-02-2019 */
+Date: 14-02-2019 */
 
 int x,
 robotX,
@@ -19,10 +19,11 @@ GREY = 204,
 WHITE = #FFFFFF,
 BLACK = #000000;
 
-boolean pickedUp = false;
+boolean pickUp = false;
 
 void setup() {
   size(400,400);
+  pixelDensity(displayDensity());
   smooth();
   background(BLACK);
   robotHeight = robotWidth;
@@ -59,37 +60,32 @@ void drawCargo() {
 
 void keyPressed() {
   if (key == CODED) {
+    if (pickUp) {
+      if (keyCode == UP) {
+      cargoY -= cargoHeight;
+      robotY -= robotHeight;
+    } else if (keyCode == DOWN) {
+      cargoY += cargoHeight;
+      robotY += robotHeight;      
+    } else if (keyCode == LEFT) {
+      cargoX -= cargoWidth;
+      robotX -= robotWidth;      
+    } else if (keyCode == RIGHT) {
+      cargoX += cargoWidth;
+      robotX += robotWidth;     
+    }
+  } else {
     if (keyCode == UP) {
       robotY -= robotHeight;
-    } 
-    if (keyCode == UP && pickedUp == true) {
-      cargoY -= cargoHeight;
-    } 
-    if (keyCode == DOWN) {
+    } else if (keyCode == DOWN) {
       robotY += robotHeight;
-    }
-    if (keyCode == DOWN && pickedUp == true) {
-      cargoY += cargoHeight;
-    }
-    if (keyCode == LEFT) {
+    } else if (keyCode == LEFT) {
       robotX -= robotWidth;
-    }
-    if (keyCode == LEFT && pickedUp == true) {
-      cargoX -= cargoWidth;
-    }
-    if (keyCode == RIGHT) {
+    } else if (keyCode == RIGHT) {
       robotX += robotWidth;
     }
-    if (keyCode == RIGHT && pickedUp == true) {
-      cargoX += cargoWidth;
-    }
   }
-  if (keyCode == ENTER && cargoX == robotX + halfCargoWidth && cargoY == robotY + halfCargoHeight) {
-    pickedUp = true;
-    counter++;
-  }
-  if (keyCode == ENTER && counter == 2) {
-    pickedUp = false;
-    counter = 0;
+} if (keyCode == ENTER && cargoX == robotX + halfCargoWidth && cargoY == robotY + halfCargoHeight) {
+    pickUp = !pickUp;
   }
 }
