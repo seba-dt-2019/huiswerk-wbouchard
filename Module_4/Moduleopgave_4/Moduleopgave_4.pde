@@ -1,7 +1,7 @@
 /* Moduleopgave_4_Bulls_Eye
 Author: Wesley Bouchard
 Student number: 575976 
-Date: 11-02-2019 */
+Date: 14-02-2019 */
 
 int BLACK = #000000,
     WHITE = #FFFFFF,
@@ -11,24 +11,33 @@ int BLACK = #000000,
     buttonY,
     buttonWidth = 100,
     buttonHeight = 50,
+    targetWidth = 50,
+    targetHeight = 50,
     amountHit = 0,
-    amountMissed = 0;
+    amountMissed = 0,
+    target_X = -buttonWidth,
+    target_Y;
+    
+float speedTarget;
+
+boolean started = false;
 
 String buttonStatus = "START";
 
 void setup() {
   size(600,600);
   pixelDensity(displayDensity());
-  background(BLACK);
   smooth();
   buttonX = width/2 - 50;
   buttonY = height - 50;
+  target_Y = width/2;
 }
 
 void draw() {
   background(BLACK);
-  drawButton(buttonStatus);
+  drawButton();
   scoreBoard();
+  update(); 
 }
 
 void scoreBoard() {
@@ -37,7 +46,13 @@ void scoreBoard() {
   text("Aantal raak: " + amountHit + " aantal mis: " + amountMissed, 5, 30);
 }
 
-void drawButton(String text) {
+void drawButton() {
+  String text;
+  if (started) {
+    text = "STOP";
+  } else {
+    text = "START";
+  }
   fill(GREEN);
   rect(buttonX, buttonY, buttonWidth, buttonHeight);
   textAlign(CENTER,CENTER);
@@ -49,31 +64,47 @@ void drawButton(String text) {
 void drawTarget(int targetX) {
   ellipseMode(CORNER);
   fill(RED);
-  ellipse(targetX, height/2, 50, 50);
+  ellipse(targetX, target_Y, targetWidth, targetHeight);
+  target_X += speedTarget;
+  println(speedTarget);  
 }
 
-void moveTarget() {
-  for (int i = 0; i < width; i = i+2) {
-    //background(BLACK);
-    drawTarget(i);
-      //delay(1);
+void resetTargetX() {
+  if (target_X > width) {
+    target_X = 0;
   }
 }
+
 void buttonClicked() {
-  if (mouseX > buttonX && mouseX < buttonX + buttonWidth 
-      && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
-    if (buttonStatus == "START") {
-    buttonStatus = "STOP";
-    moveTarget();
-    }
-    else if (buttonStatus == "STOP") {
-      buttonStatus = "START";
-      amountHit = 0;
-      amountMissed = 0;
-    }
+  if (started) {
+    started = false;
+    amountHit = 0;
+    amountMissed = 0;
+  } else {
+    started = true;
+    speedTarget = random(2, 10);
+  }
+}
+
+void update() {
+  if (started) {
+    drawTarget(target_X);
+    resetTargetX();
+  } else {
+    target_X = -buttonWidth;
   }
 }
 
 void mouseClicked() {
-  buttonClicked();
+  if (mouseX > buttonX && mouseX < buttonX + buttonWidth 
+    && mouseY > buttonY && mouseY < buttonY + buttonHeight) {
+      buttonClicked();
+    } else if (mouseX > target_X && mouseX < target_X + targetWidth
+      && mouseY > target_Y && mouseY < target_Y + targetHeight) {
+      println("RAAK");
+      amountHit++;
+      } else {
+        println("MIS");
+        amountMissed++;
+      }
 }
