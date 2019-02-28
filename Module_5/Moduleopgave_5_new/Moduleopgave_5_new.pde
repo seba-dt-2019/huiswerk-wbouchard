@@ -1,7 +1,7 @@
 /* moduleopgave_5
 Author: Wesley Bouchard
 Student number: 575976 
-Date: 21-02-2019 */
+Date: 28-02-2019 */
 
 // Variabelen
 float obees = 30,
@@ -11,17 +11,22 @@ float obees = 30,
       BMI;
 
 int factor = 4,
+    zoomFactor = 10000,
     centerScreen,
     barWidth = 100,
     sliderWidth = 300,
     sliderHeight = 16,
-    sliderY,
+    sliderWeightY,
     sliderX,
+    sliderLengthY,
     sliderButtonWidth = 15,
-    sliderButtonX = 200;
+    sliderWeightButtonX = 150,
+    sliderLengthButtonX = 180;
 
-boolean buttonPressed = false,
-        buttonReleased;
+boolean buttonWeightPressed = false,
+        buttonWeightReleased = true,
+        buttonLengthPressed = false,
+        buttonLengthReleased = true;
 
 final int MAXWEIGHT = 200,
           MINWEIGHT = 10,
@@ -33,8 +38,9 @@ void setup() {
   pixelDensity(displayDensity());
   smooth();
   centerScreen = height/2;
-  sliderY = centerScreen + 50;
+  sliderWeightY = centerScreen + 30;
   sliderX = width/2 - sliderWidth/2;
+  sliderLengthY = centerScreen + 100;
 }
 
 void draw() {
@@ -42,28 +48,38 @@ void draw() {
   drawLines();
   writeTextUnderLines();
   drawBar(width/2 - barWidth/2, centerScreen, barWidth, 0 - (calculateBMI()*factor));
-  drawSlider(sliderX, sliderY, sliderWidth, sliderHeight);
-  drawSliderButton(sliderButtonX, sliderY + sliderHeight/2, sliderButtonWidth, sliderHeight);
-  writeTextUnderSlider("Gewicht: " + readWeight() + " kg", sliderX, sliderY + 30);
+  drawSliders();
+  drawSliderButtons();
+  writeTextUnderSliders();
   update();
+  println(sliderWeightButtonX);
 }
 
 void update() {
-  if (buttonPressed) {
-      sliderButtonX = constrain(mouseX, sliderX + sliderButtonWidth/2, (sliderX + sliderWidth) - sliderButtonWidth/2);
-    println(sliderButtonX);
+  if (buttonWeightPressed) {
+      sliderWeightButtonX = constrain(mouseX, sliderX + sliderButtonWidth/2, (sliderX + sliderWidth) - sliderButtonWidth/2);
+  }
+  else if (buttonLengthPressed) {
+    sliderLengthButtonX = constrain(mouseX, sliderX + sliderButtonWidth/2, (sliderX + sliderWidth) - sliderButtonWidth/2);
   } 
 }
 
 void mousePressed() {
-    if (mouseX > sliderButtonX - sliderButtonWidth/2 && mouseX < sliderButtonX + sliderButtonWidth/2 
-        && mouseY > sliderY && mouseY < sliderY + sliderHeight) {
-          buttonReleased = false;
-          buttonPressed = true;
+    if (mouseX > sliderWeightButtonX - sliderButtonWidth/2 && mouseX < sliderWeightButtonX + sliderButtonWidth/2 
+        && mouseY > sliderWeightY && mouseY < sliderWeightY + sliderHeight) {
+          buttonWeightReleased = false;
+          buttonWeightPressed = true;
+        }
+    else if (mouseX > sliderLengthButtonX - sliderButtonWidth/2 && mouseX < sliderLengthButtonX + sliderButtonWidth/2 
+        && mouseY > sliderLengthY && mouseY < sliderLengthY + sliderHeight) {
+          buttonLengthReleased = false;
+          buttonLengthPressed = true;
         }
 }
 
 void mouseReleased() {
-  buttonPressed = false;
-  buttonReleased = true;
+  buttonWeightPressed = false;
+  buttonWeightReleased = true;
+  buttonLengthPressed = false;
+  buttonLengthReleased = true;
 }
